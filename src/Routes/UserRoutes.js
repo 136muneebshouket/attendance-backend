@@ -68,6 +68,7 @@ router.post("/login", async (req, resp) => {
           message: "Invalid Username or Password",
         });
       } else {
+        console.log({ id: user._id, username: user.username, email: user.email })
         const token = jwt.sign({ id: user._id, username: user.username, email: user.email }, process.env.JWT_SECRERT_KEY, { expiresIn: '10m' });
         const refreshToken = jwt.sign({ id: user._id, username: user.username, email: user.email }, process.env.JWT_SECRERT_KEY, { expiresIn: '7d' });
         resp.status(200).json({token, refreshToken });
@@ -172,8 +173,8 @@ router.post("/changepassword",checkuserAuth, async(req,res)=>{
   // Logged user
   router.get("/loggeduser",checkuserAuth, async (req, res) => {
     try {
-     
-   res.status(200).send({"User":req.user})
+     console.log(req.user.id)
+   res.status(200).json({"User":req.user.username})
     } catch (e) {
       res.status(404).send(e);
     }

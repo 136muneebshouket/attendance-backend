@@ -22,8 +22,8 @@ router.post('/token', (req, res) => {
       res.status(401).send('Invalid refresh token');
       return;
     }
-
-    const accessToken = jwt.sign({ username: decoded.username }, jwtSecret, { expiresIn: '10m' });
+     console.log({ id: decoded.id, username: decoded.username, email: decoded.email })
+    const accessToken = jwt.sign({ id: decoded.id, username: decoded.username, email: decoded.email }, process.env.JWT_SECRERT_KEY, { expiresIn: '10m' });
     res.json({ accessToken });
   });
   } catch (error) {
