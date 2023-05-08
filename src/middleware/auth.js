@@ -8,22 +8,24 @@ var checkuserAuth = async (req, res, next) => {
 
     if (authorization && authorization.startsWith("Bearer")) {
         try {
+
             token = authorization.split(' ')[1]
+            if (!token) {
+                res.status(401).json('Access token not provided');
+            }
             const UserDetails = jwt.verify(token, process.env.JWT_SECRERT_KEY)
-           
            
             const {userID} = UserDetails
             req.user = await UserModel.findById(userID).select("-password");
             
             next()
         } catch (e) {
+            res.status(401).json('Invalid access token');
             console.log(e);
         }
 
     }
-    if (!token) {
-        res.send("No User found")
-    }
+    
 }
 
 

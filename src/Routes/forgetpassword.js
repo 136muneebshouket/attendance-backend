@@ -5,6 +5,7 @@ const crypto = require('crypto');
 const moment = require('moment');
 const bcrypt = require("bcrypt");
 const User = require("../models/usermodel");
+const checkuserAuth = require("../middleware/auth")
 
 
 
@@ -14,7 +15,7 @@ router.get('/forgot-password', (req, res) => {
 });
 
 // Handle forgot password form submission
-router.post('/forgot-password', async (req, res) => {
+router.post('/forgot-password',checkuserAuth, async (req, res) => {
     try {
         const email = req.body.email;
 
@@ -66,14 +67,14 @@ router.post('/forgot-password', async (req, res) => {
 });
 
 // Password reset page
-router.get('/reset-password/:resetToken', async (req, res) => {
-  const resetToken = req.params.resetToken;
-  const user = await User.findOne({ resetToken, resetTokenExpiration: { $gt: Date.now() } });
-  if (!user) {
-    return res.status(404).json({ message: 'Invalid or expired reset token.' });
-  }
-  res.render('forgetpassword', { resetToken });
-});
+// router.get('/reset-password/:resetToken', async (req, res) => {
+//   const resetToken = req.params.resetToken;
+//   const user = await User.findOne({ resetToken, resetTokenExpiration: { $gt: Date.now() } });
+//   if (!user) {
+//     return res.status(404).json({ message: 'Invalid or expired reset token.' });
+//   }
+//   res.render('forgetpassword', { resetToken });
+// });
 
 // Handle password reset form submission
 router.post('/reset-password', async (req, res) => {
@@ -84,7 +85,6 @@ router.post('/reset-password', async (req, res) => {
     const user = await User.findOne({ resetToken, resetTokenExpiration: { $gt: Date.now() } });
     if (!user) {
       return res.status(404).json({ message: 'Invalid or expired reset token.' });
-  
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     user.password = hashedPassword;

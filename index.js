@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const UsersRoutes = require('./src/Routes/UserRoutes')
 const EmployeeRoutes = require('./src/Routes/EmployeeRoute')
 const Forgetpassword = require('./src/Routes/forgetpassword')
+const refreshtoken=require('./src/Routes/refereshtoken')
 const app = express();
 require("dotenv").config()
 mongoose.set('strictQuery', true)
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use("/api/user",UsersRoutes)
 app.use("/api/employee",EmployeeRoutes)
 app.use("/api/forgetpassword",Forgetpassword)
+app.use("/api/refreshtoken",refreshtoken)
 
 
 
